@@ -1,5 +1,12 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Windows.Forms;
+using ClosedXML.Excel;
+using System;
+using System.IO;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
 
 namespace ShopInventoryApp
 {
@@ -32,6 +39,25 @@ namespace ShopInventoryApp
                 {
                     MessageBox.Show("შეცდომა ბაზასთან დაკავშირებისას: " + ex.Message);
                 }
+/*
+                // თუ ცოტაა პროდუქტი გაწითლდეს
+                foreach (DataGridViewRow row in dgvProducts.Rows)
+                {
+                    if (row.IsNewRow) continue;
+
+                    // ვამოწმებთ მე-7 სვეტს (ინდექსი 6 -> Quantity)
+                    if (row.Cells[6].Value != null &&
+                        int.TryParse(row.Cells[6].Value?.ToString(), out int quantity))
+                    {
+                        if (quantity <= 5)
+                        {
+                            row.DefaultCellStyle.BackColor = System.Drawing.Color.LightCoral;
+                            row.DefaultCellStyle.ForeColor = System.Drawing.Color.Black;
+                        }
+                    }
+
+                }
+*/
             }
         }
 
@@ -263,6 +289,99 @@ namespace ShopInventoryApp
                         MessageBox.Show("შეცდომა მოხდა ძებნისას: " + ex.Message);
                     }
                 }
+            }
+        }
+
+        private void btnExportExcel_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (SaveFileDialog sfd = new SaveFileDialog() { Filter = "Excel Workbook|*.xlsx" })
+                {
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        DataTable dt = new DataTable();
+
+                        // 1. სვეტების სათაურების წამოღება DataGridView-დან
+                        foreach (DataGridViewColumn column in dgvProducts.Columns)
+                        {
+                            dt.Columns.Add(column.HeaderText, typeof(string));
+                        }
+
+                        // 2. მონაცემების წამოღება თითოეული სტრიქონიდან
+                        foreach (DataGridViewRow row in dgvProducts.Rows)
+                        {
+                            if (!row.IsNewRow)
+                            {
+                                DataRow dr = dt.NewRow();
+                                for (int i = 0; i < dgvProducts.Columns.Count; i++)
+                                {
+                                    dr[i] = row.Cells[i].Value?.ToString() ?? "";
+                                }
+                                dt.Rows.Add(dr);
+                            }
+                        }
+
+                        // 3. Excel ფაილის შექმნა და შენახვა
+                        using (XLWorkbook wb = new XLWorkbook())
+                        {
+                            var worksheet = wb.Worksheets.Add(dt, "Products");
+                            worksheet.Columns().AdjustToContents(); // სვეტების ზომების ავტომატური გასწორება
+                            wb.SaveAs(sfd.FileName);
+                        }
+
+                        MessageBox.Show("მონაცემები წარმატებით ექსპორტირდა Excel-ში!", "წარმატება", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"შეცდომა ექსპორტისას: {ex.Message}", "შეცდომა", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnExportPdf_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (SaveFileDialog sfd = new SaveFileDialog() { Filter = "PDF Document|*.pdf" })
+                {
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        using (PdfWriter writer = new PdfWriter(sfd.FileName))
+                        using (PdfDocument pdf = new PdfDocument(writer))
+                        using (Document document = new Document(pdf))
+                        {
+                            Table table = new Table(dgvProducts.Columns.Count);
+
+                            // 1. სვეტების სათაურები
+                            foreach (DataGridViewColumn column in dgvProducts.Columns)
+                            {
+                                table.AddHeaderCell(column.HeaderText);
+                            }
+
+                            // 2. მონაცემები
+                            foreach (DataGridViewRow row in dgvProducts.Rows)
+                            {
+                                if (!row.IsNewRow)
+                                {
+                                    foreach (DataGridViewCell cell in row.Cells)
+                                    {
+                                        table.AddCell(cell.Value?.ToString() ?? "");
+                                    }
+                                }
+                            }
+
+                            document.Add(table);
+                        }
+
+                        MessageBox.Show("მონაცემები წარმატებით ექსპორტირდა PDF-ში!", "წარმატება", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"შეცდომა ექსპორტისას: {ex.Message}", "შეცდომა", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

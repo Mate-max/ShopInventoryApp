@@ -46,6 +46,8 @@
             label6 = new Label();
             btnDeleteProduct = new Button();
             btnUpdateProduct = new Button();
+            btnExportExcel = new Button();
+            btnExportPdf = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvProducts).BeginInit();
             SuspendLayout();
             // 
@@ -247,12 +249,34 @@
             btnUpdateProduct.UseVisualStyleBackColor = false;
             btnUpdateProduct.Click += btnUpdateProduct_Click;
             // 
+            // btnExportExcel
+            // 
+            btnExportExcel.Location = new Point(244, 518);
+            btnExportExcel.Name = "btnExportExcel";
+            btnExportExcel.Size = new Size(203, 34);
+            btnExportExcel.TabIndex = 17;
+            btnExportExcel.Text = "Excel-ში ექსპორტი";
+            btnExportExcel.UseVisualStyleBackColor = true;
+            btnExportExcel.Click += btnExportExcel_Click;
+            // 
+            // btnExportPdf
+            // 
+            btnExportPdf.Location = new Point(545, 518);
+            btnExportPdf.Name = "btnExportPdf";
+            btnExportPdf.Size = new Size(193, 34);
+            btnExportPdf.TabIndex = 18;
+            btnExportPdf.Text = "PDF-ში ექსპორტი";
+            btnExportPdf.UseVisualStyleBackColor = true;
+            btnExportPdf.Click += btnExportPdf_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLight;
             ClientSize = new Size(1950, 1076);
+            Controls.Add(btnExportPdf);
+            Controls.Add(btnExportExcel);
             Controls.Add(btnUpdateProduct);
             Controls.Add(btnDeleteProduct);
             Controls.Add(label6);
@@ -297,5 +321,7 @@
         private Label label6;
         private Button btnDeleteProduct;
         private Button btnUpdateProduct;
+        private Button btnExportExcel;
+        private Button btnExportPdf;
     }
 }
