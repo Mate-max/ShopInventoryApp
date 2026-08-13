@@ -31,15 +31,16 @@
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             txtBarcode = new TextBox();
             dgvCart = new DataGridView();
-            colBarcode = new DataGridViewTextBoxColumn();
-            colProductName = new DataGridViewTextBoxColumn();
-            colQuantity = new DataGridViewTextBoxColumn();
-            colPrice = new DataGridViewTextBoxColumn();
-            colTotal = new DataGridViewTextBoxColumn();
             lblTotal = new Label();
             btnCompleteSale = new Button();
             label2 = new Label();
             label3 = new Label();
+            ProductID = new DataGridViewTextBoxColumn();
+            Barcode = new DataGridViewTextBoxColumn();
+            colProductName = new DataGridViewTextBoxColumn();
+            Quantity = new DataGridViewTextBoxColumn();
+            Price = new DataGridViewTextBoxColumn();
+            colTotal = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dgvCart).BeginInit();
             SuspendLayout();
             // 
@@ -49,6 +50,7 @@
             txtBarcode.Name = "txtBarcode";
             txtBarcode.Size = new Size(441, 31);
             txtBarcode.TabIndex = 0;
+            txtBarcode.TextChanged += txtBarcode_TextChanged;
             txtBarcode.KeyDown += txtBarcode_KeyDown;
             // 
             // dgvCart
@@ -65,43 +67,16 @@
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             dgvCart.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvCart.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvCart.Columns.AddRange(new DataGridViewColumn[] { colBarcode, colProductName, colQuantity, colPrice, colTotal });
+            dgvCart.Columns.AddRange(new DataGridViewColumn[] { ProductID, Barcode, colProductName, Quantity, Price, colTotal });
             dgvCart.EnableHeadersVisualStyles = false;
             dgvCart.Location = new Point(764, 103);
             dgvCart.Name = "dgvCart";
             dgvCart.RowHeadersWidth = 62;
             dgvCart.Size = new Size(1131, 448);
             dgvCart.TabIndex = 1;
-            // 
-            // colBarcode
-            // 
-            colBarcode.HeaderText = "შტრიხკოდი";
-            colBarcode.MinimumWidth = 8;
-            colBarcode.Name = "colBarcode";
-            // 
-            // colProductName
-            // 
-            colProductName.HeaderText = "დასახელება";
-            colProductName.MinimumWidth = 8;
-            colProductName.Name = "colProductName";
-            // 
-            // colQuantity
-            // 
-            colQuantity.HeaderText = "რაოდენობა";
-            colQuantity.MinimumWidth = 8;
-            colQuantity.Name = "colQuantity";
-            // 
-            // colPrice
-            // 
-            colPrice.HeaderText = "ფასი";
-            colPrice.MinimumWidth = 8;
-            colPrice.Name = "colPrice";
-            // 
-            // colTotal
-            // 
-            colTotal.HeaderText = "ჯამი";
-            colTotal.MinimumWidth = 8;
-            colTotal.Name = "colTotal";
+            dgvCart.CellContentClick += dgvCart_CellContentClick;
+            dgvCart.CellValueChanged += dgvCart_CellValueChanged;
+            dgvCart.KeyDown += dgvCart_KeyDown;
             // 
             // lblTotal
             // 
@@ -124,6 +99,7 @@
             btnCompleteSale.TabIndex = 3;
             btnCompleteSale.Text = "გაყიდვა";
             btnCompleteSale.UseVisualStyleBackColor = false;
+            btnCompleteSale.Click += btnCompleteSale_Click;
             // 
             // label2
             // 
@@ -145,6 +121,43 @@
             label3.TabIndex = 5;
             label3.Text = "შტრიხკოდი";
             // 
+            // ProductID
+            // 
+            ProductID.HeaderText = "ProductID";
+            ProductID.MinimumWidth = 8;
+            ProductID.Name = "ProductID";
+            ProductID.Visible = false;
+            // 
+            // Barcode
+            // 
+            Barcode.HeaderText = "შტრიხკოდი";
+            Barcode.MinimumWidth = 8;
+            Barcode.Name = "Barcode";
+            // 
+            // colProductName
+            // 
+            colProductName.HeaderText = "დასახელება";
+            colProductName.MinimumWidth = 8;
+            colProductName.Name = "colProductName";
+            // 
+            // Quantity
+            // 
+            Quantity.HeaderText = "რაოდენობა";
+            Quantity.MinimumWidth = 8;
+            Quantity.Name = "Quantity";
+            // 
+            // Price
+            // 
+            Price.HeaderText = "ფასი";
+            Price.MinimumWidth = 8;
+            Price.Name = "Price";
+            // 
+            // colTotal
+            // 
+            colTotal.HeaderText = "ჯამი";
+            colTotal.MinimumWidth = 8;
+            colTotal.Name = "colTotal";
+            // 
             // SalesForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -158,6 +171,7 @@
             Controls.Add(txtBarcode);
             Name = "SalesForm";
             Text = "SalesForm";
+            Load += SalesForm_Load;
             ((System.ComponentModel.ISupportInitialize)dgvCart).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -169,12 +183,13 @@
         private DataGridView dgvCart;
         private Label lblTotal;
         private Button btnCompleteSale;
-        private DataGridViewTextBoxColumn colBarcode;
-        private DataGridViewTextBoxColumn colProductName;
-        private DataGridViewTextBoxColumn colQuantity;
-        private DataGridViewTextBoxColumn colPrice;
-        private DataGridViewTextBoxColumn colTotal;
         private Label label2;
         private Label label3;
+        private DataGridViewTextBoxColumn ProductID;
+        private DataGridViewTextBoxColumn Barcode;
+        private DataGridViewTextBoxColumn colProductName;
+        private DataGridViewTextBoxColumn Quantity;
+        private DataGridViewTextBoxColumn Price;
+        private DataGridViewTextBoxColumn colTotal;
     }
 }

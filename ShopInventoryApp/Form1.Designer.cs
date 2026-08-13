@@ -36,7 +36,6 @@
             txtCostPrice = new TextBox();
             txtPrice = new TextBox();
             txtStock = new TextBox();
-            txtCategoryID = new TextBox();
             txtProductName = new TextBox();
             შტრიხკოდი = new Label();
             label2 = new Label();
@@ -48,6 +47,7 @@
             btnUpdateProduct = new Button();
             btnExportExcel = new Button();
             btnExportPdf = new Button();
+            cmbCategories = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)dgvProducts).BeginInit();
             SuspendLayout();
             // 
@@ -78,6 +78,7 @@
             // btnLoadProducts
             // 
             btnLoadProducts.BackColor = Color.DarkBlue;
+            btnLoadProducts.Cursor = Cursors.Hand;
             btnLoadProducts.FlatAppearance.BorderSize = 0;
             btnLoadProducts.FlatStyle = FlatStyle.Flat;
             btnLoadProducts.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
@@ -94,6 +95,7 @@
             // btnAddProduct
             // 
             btnAddProduct.BackColor = Color.Green;
+            btnAddProduct.Cursor = Cursors.Hand;
             btnAddProduct.FlatAppearance.BorderSize = 0;
             btnAddProduct.FlatStyle = FlatStyle.Flat;
             btnAddProduct.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
@@ -140,14 +142,6 @@
             txtStock.Size = new Size(200, 34);
             txtStock.TabIndex = 6;
             // 
-            // txtCategoryID
-            // 
-            txtCategoryID.Font = new Font("Segoe UI", 10F);
-            txtCategoryID.Location = new Point(538, 196);
-            txtCategoryID.Name = "txtCategoryID";
-            txtCategoryID.Size = new Size(200, 34);
-            txtCategoryID.TabIndex = 7;
-            // 
             // txtProductName
             // 
             txtProductName.Font = new Font("Segoe UI", 10F);
@@ -183,9 +177,9 @@
             label3.Font = new Font("Segoe UI", 10F);
             label3.Location = new Point(309, 202);
             label3.Name = "label3";
-            label3.Size = new Size(160, 28);
+            label3.Size = new Size(123, 28);
             label3.TabIndex = 11;
-            label3.Text = "კატეგორიის ID";
+            label3.Text = "კატეგორია";
             // 
             // label4
             // 
@@ -220,6 +214,7 @@
             // btnDeleteProduct
             // 
             btnDeleteProduct.BackColor = Color.Red;
+            btnDeleteProduct.Cursor = Cursors.Hand;
             btnDeleteProduct.FlatAppearance.BorderSize = 0;
             btnDeleteProduct.FlatStyle = FlatStyle.Flat;
             btnDeleteProduct.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
@@ -236,6 +231,7 @@
             // btnUpdateProduct
             // 
             btnUpdateProduct.BackColor = Color.Olive;
+            btnUpdateProduct.Cursor = Cursors.Hand;
             btnUpdateProduct.FlatAppearance.BorderSize = 0;
             btnUpdateProduct.FlatStyle = FlatStyle.Flat;
             btnUpdateProduct.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
@@ -251,23 +247,43 @@
             // 
             // btnExportExcel
             // 
+            btnExportExcel.BackColor = Color.FromArgb(21, 115, 7);
+            btnExportExcel.Cursor = Cursors.Hand;
+            btnExportExcel.FlatAppearance.BorderSize = 0;
+            btnExportExcel.FlatStyle = FlatStyle.Flat;
+            btnExportExcel.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnExportExcel.ForeColor = Color.White;
             btnExportExcel.Location = new Point(244, 518);
             btnExportExcel.Name = "btnExportExcel";
-            btnExportExcel.Size = new Size(203, 34);
+            btnExportExcel.Size = new Size(167, 68);
             btnExportExcel.TabIndex = 17;
             btnExportExcel.Text = "Excel-ში ექსპორტი";
-            btnExportExcel.UseVisualStyleBackColor = true;
+            btnExportExcel.UseVisualStyleBackColor = false;
             btnExportExcel.Click += btnExportExcel_Click;
             // 
             // btnExportPdf
             // 
+            btnExportPdf.BackColor = Color.FromArgb(192, 57, 43);
+            btnExportPdf.Cursor = Cursors.Hand;
+            btnExportPdf.FlatAppearance.BorderSize = 0;
+            btnExportPdf.FlatStyle = FlatStyle.Flat;
+            btnExportPdf.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnExportPdf.ForeColor = Color.White;
             btnExportPdf.Location = new Point(545, 518);
             btnExportPdf.Name = "btnExportPdf";
-            btnExportPdf.Size = new Size(193, 34);
+            btnExportPdf.Size = new Size(193, 68);
             btnExportPdf.TabIndex = 18;
             btnExportPdf.Text = "PDF-ში ექსპორტი";
-            btnExportPdf.UseVisualStyleBackColor = true;
+            btnExportPdf.UseVisualStyleBackColor = false;
             btnExportPdf.Click += btnExportPdf_Click;
+            // 
+            // cmbCategories
+            // 
+            cmbCategories.FormattingEnabled = true;
+            cmbCategories.Location = new Point(538, 197);
+            cmbCategories.Name = "cmbCategories";
+            cmbCategories.Size = new Size(200, 33);
+            cmbCategories.TabIndex = 19;
             // 
             // Form1
             // 
@@ -275,6 +291,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLight;
             ClientSize = new Size(1950, 1076);
+            Controls.Add(cmbCategories);
             Controls.Add(btnExportPdf);
             Controls.Add(btnExportExcel);
             Controls.Add(btnUpdateProduct);
@@ -286,7 +303,6 @@
             Controls.Add(label2);
             Controls.Add(შტრიხკოდი);
             Controls.Add(txtProductName);
-            Controls.Add(txtCategoryID);
             Controls.Add(txtStock);
             Controls.Add(txtPrice);
             Controls.Add(txtCostPrice);
@@ -311,7 +327,6 @@
         private TextBox txtCostPrice;
         private TextBox txtPrice;
         private TextBox txtStock;
-        private TextBox txtCategoryID;
         private TextBox txtProductName;
         private Label შტრიხკოდი;
         private Label label2;
@@ -323,5 +338,6 @@
         private Button btnUpdateProduct;
         private Button btnExportExcel;
         private Button btnExportPdf;
+        private ComboBox cmbCategories;
     }
 }

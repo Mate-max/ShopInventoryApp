@@ -26,7 +26,7 @@ namespace ShopInventoryApp
                     conn.Open();
 
                     // გამოვიძახოთ ჩვენი შექმნილი VIEW
-                    string query = "SELECT * FROM vw_ProductList";
+                    string query = "SELECT * FROM vw_ProductList where IsActive = 1";
 
                     SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
                     DataTable dt = new DataTable();
@@ -39,44 +39,25 @@ namespace ShopInventoryApp
                 {
                     MessageBox.Show("შეცდომა ბაზასთან დაკავშირებისას: " + ex.Message);
                 }
-/*
-                // თუ ცოტაა პროდუქტი გაწითლდეს
-                foreach (DataGridViewRow row in dgvProducts.Rows)
-                {
-                    if (row.IsNewRow) continue;
-
-                    // ვამოწმებთ მე-7 სვეტს (ინდექსი 6 -> Quantity)
-                    if (row.Cells[6].Value != null &&
-                        int.TryParse(row.Cells[6].Value?.ToString(), out int quantity))
-                    {
-                        if (quantity <= 5)
-                        {
-                            row.DefaultCellStyle.BackColor = System.Drawing.Color.LightCoral;
-                            row.DefaultCellStyle.ForeColor = System.Drawing.Color.Black;
-                        }
-                    }
-
-                }
-*/
             }
         }
 
         private void btnAddProduct_Click(object sender, EventArgs e)
         {
+            // 1. ვალიდაცია: ვამოწმებთ ტექსტბოქსებს და ასევე ComboBox-ს (არჩეულია თუ არა კატეგორია)
             if (string.IsNullOrWhiteSpace(txtBarcode.Text) ||
                 string.IsNullOrWhiteSpace(txtProductName.Text) ||
-                string.IsNullOrWhiteSpace(txtCategoryID.Text) ||
+                cmbCategories.SelectedValue == null || // <--- ამოწმებს, არჩეულია თუ არა კატეგორია
                 string.IsNullOrWhiteSpace(txtCostPrice.Text) ||
                 string.IsNullOrWhiteSpace(txtPrice.Text) ||
                 string.IsNullOrWhiteSpace(txtStock.Text))
             {
-                MessageBox.Show("გთხოვთ შეავსოთ ყველა ველი!");
+                MessageBox.Show("გთხოვთ შეავსოთ ყველა ველი და აირჩიოთ კატეგორია!");
                 return;
             }
 
-            // სვეტების სახელები ზუსტად შენი ბაზის შესაბამისია
-            string query = @"INSERT INTO Products (BarCode, ProductName, CategoryID, BuyPrice, SellPrice, Quantity)
-                    VALUES (@BarCode, @ProductName, @CategoryID, @BuyPrice, @SellPrice, @Quantity)";
+            string query = @"INSERT INTO Products (BarCode, ProductName, CategoryID, BuyPrice, SellPrice, Quantity) 
+                     VALUES (@BarCode, @ProductName, @CategoryID, @BuyPrice, @SellPrice, @Quantity)";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -87,7 +68,10 @@ namespace ShopInventoryApp
                     {
                         cmd.Parameters.AddWithValue("@BarCode", txtBarcode.Text);
                         cmd.Parameters.AddWithValue("@ProductName", txtProductName.Text);
-                        cmd.Parameters.AddWithValue("@CategoryID", int.Parse(txtCategoryID.Text));
+
+                        // 2. ComboBox-იდან იღებს ფარულ ID-ს (ValueMember-ს)
+                        cmd.Parameters.AddWithValue("@CategoryID", Convert.ToInt32(cmbCategories.SelectedValue));
+
                         cmd.Parameters.AddWithValue("@BuyPrice", decimal.Parse(txtCostPrice.Text));
                         cmd.Parameters.AddWithValue("@SellPrice", decimal.Parse(txtPrice.Text));
                         cmd.Parameters.AddWithValue("@Quantity", int.Parse(txtStock.Text));
@@ -98,9 +82,10 @@ namespace ShopInventoryApp
 
                         btnLoadProducts_Click(sender, e);
 
+                        // 3. ველების გასუფთავება
                         txtBarcode.Clear();
                         txtProductName.Clear();
-                        txtCategoryID.Clear();
+                        cmbCategories.SelectedIndex = -1; // <--- ComboBox-ის დაბრუნება ცარიელ მდგომარეობაში
                         txtCostPrice.Clear();
                         txtPrice.Clear();
                         txtStock.Clear();
@@ -118,6 +103,26 @@ namespace ShopInventoryApp
         }
         private void label1_Click(object sender, EventArgs e)
         {
+        }
+
+        private void LoadCategories()
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "SELECT CategoryID, CategoryName FROM Categories";
+                SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                // რას დაინახავს მომხმარებელი ეკრანზე:
+                cmbCategories.DisplayMember = "CategoryName";
+
+                // რა მნიშვნელობა ექნება ამ არჩევანს ფონურ რეჟიმში (ID):
+                cmbCategories.ValueMember = "CategoryID";
+
+                cmbCategories.DataSource = dt;
+                cmbCategories.SelectedIndex = -1; // თავიდან არაფერი იყოს არჩეული
+            }
         }
 
         private void btnDeleteProduct_Click(object sender, EventArgs e)
@@ -143,7 +148,7 @@ namespace ShopInventoryApp
             if (confirm == DialogResult.Yes)
             {
                 string connectionString = @"Server=.\SQLEXPRESS;Database=ShopInventoryDB;Trusted_Connection=True;TrustServerCertificate=True;";
-                string query = "DELETE FROM Products WHERE ProductID = @ProductID";
+                string query = "UPDATE Products SET IsActive = 0 WHERE ProductID = @ProductID";
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
@@ -181,7 +186,7 @@ namespace ShopInventoryApp
 
                 // ვინაიდან ცხრილში ID-ს ნაცვლად ტექსტი "ტკბილეული" წერია,
                 // ველში ჩავსვათ 1 და საჭიროებისამებრ ხელით შეცვალე შესაბამისი ID ციფრით
-                txtCategoryID.Text = "1";
+                cmbCategories.SelectedValue = 1;
 
                 txtCostPrice.Text = row.Cells["თვითღირებულება"].Value?.ToString();
                 txtPrice.Text = row.Cells["გასაყიდი ფასი"].Value?.ToString();
@@ -220,7 +225,7 @@ namespace ShopInventoryApp
                     {
                         cmd.Parameters.AddWithValue("@BarCode", txtBarcode.Text);
                         cmd.Parameters.AddWithValue("@ProductName", txtProductName.Text);
-                        cmd.Parameters.AddWithValue("@CategoryID", int.Parse(txtCategoryID.Text));
+                        cmd.Parameters.AddWithValue("@CategoryID", Convert.ToInt32(cmbCategories.SelectedValue));
                         cmd.Parameters.AddWithValue("@BuyPrice", decimal.Parse(txtCostPrice.Text));
                         cmd.Parameters.AddWithValue("@SellPrice", decimal.Parse(txtPrice.Text));
                         cmd.Parameters.AddWithValue("@Quantity", int.Parse(txtStock.Text));
@@ -250,6 +255,8 @@ namespace ShopInventoryApp
 
             // მონაცემების ავტომატური ჩატვირთვა ჩართვისთანავე
             btnLoadProducts_Click(sender, e);
+
+            LoadCategories();
         }
 
         private void txtBarcode_KeyDown(object sender, KeyEventArgs e)
@@ -274,7 +281,7 @@ namespace ShopInventoryApp
                         {
                             // თუ პროდუქტი მოიძებნა, მონაცემების ველებში გადატანა
                             txtProductName.Text = reader["ProductName"].ToString();
-                            txtCategoryID.Text = reader["CategoryID"].ToString();
+                            cmbCategories.SelectedValue = reader["CategoryID"];
                             txtCostPrice.Text = reader["BuyPrice"].ToString();
                             txtPrice.Text = reader["SellPrice"].ToString();
                             txtStock.Text = reader["Quantity"].ToString();
