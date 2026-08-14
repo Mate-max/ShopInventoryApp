@@ -1,9 +1,8 @@
-using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Windows.Forms;
+using Microsoft.Data.SqlClient;
 using ClosedXML.Excel;
-using System;
-using System.IO;
+
+// iText 7 - PDF ბიბლიოთეკები
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
@@ -391,5 +390,7 @@ namespace ShopInventoryApp
                 MessageBox.Show($"შეცდომა ექსპორტისას: {ex.Message}", "შეცდომა", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        
     }
 }

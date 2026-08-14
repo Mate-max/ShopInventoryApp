@@ -1,5 +1,15 @@
-﻿using DocumentFormat.OpenXml.Office2013.Excel;
+﻿using System.Net;
+using System.Net.Mail;
 using Microsoft.Data.SqlClient;
+// iText 7 - PDF ბიბლიოთეკები
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Font;
+using iText.IO.Font.Constants;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
+using iText.Layout.Borders;
 
 namespace ShopInventoryApp
 {
@@ -107,11 +117,6 @@ namespace ShopInventoryApp
             lblTotal.Text = $"{total:N2} ₾";
         }
 
-        private void dgvCart_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
         private void dgvCart_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             // ვამოწმებთ, რომ ცვლილება მოხდა "Quantity" (რაოდენობის) სვეტში
@@ -157,7 +162,7 @@ namespace ShopInventoryApp
 
         private void btnCompleteSale_Click(object sender, EventArgs e)
         {
-            //1. შემოწმება: არის თუ არა რაიმე კალათაში
+            // 1. შემოწმება: არის თუ არა რაიმე კალათაში
             bool hasItems = false;
             foreach (DataGridViewRow row in dgvCart.Rows)
             {
@@ -173,7 +178,7 @@ namespace ShopInventoryApp
                 return;
             }
 
-            //2. ბაზაში გაყიდვის გატარება
+            // 2. ბაზაში გაყიდვის გატარება
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -191,14 +196,14 @@ namespace ShopInventoryApp
                         }
                     }
 
-                    // ბ) Sales ცხრილში ჩაწერა და ახალი SaleId-ის ამოღება
+                    // ბ) Sales ცხრილში ჩაწერა და ახალი SaleID-ის ამოღება
                     string saleQuery = "INSERT INTO Sales (TotalAmount) OUTPUT INSERTED.SaleID VALUES (@TotalAmount)";
                     SqlCommand saleCmd = new SqlCommand(saleQuery, conn, transaction);
                     saleCmd.Parameters.AddWithValue("@TotalAmount", grandTotal);
 
-                    int saled = (int)saleCmd.ExecuteScalar();
+                    int saleId = (int)saleCmd.ExecuteScalar(); // 👈 ცვლადის სახელი გავასწორეთ saleId-ზე
 
-                    // გ) SaleDetails-ში ჩაწერა და Products-ში ნაშთის შემცირება
+                    // გ) SaleDetails-ში ჩაწერა
                     foreach (DataGridViewRow row in dgvCart.Rows)
                     {
                         if (row.IsNewRow || row.Cells["ProductID"].Value == null) continue;
@@ -210,25 +215,40 @@ namespace ShopInventoryApp
 
                         // დეტალების ჩაწერა
                         string detailQuery = @"INSERT INTO SaleDetails (SaleID, ProductID, Quantity, UnitPrice, TotalPrice) 
-                       VALUES (@SaleID, @ProductID, @Quantity, @UnitPrice, @TotalPrice)";
+                                       VALUES (@SaleID, @ProductID, @Quantity, @UnitPrice, @TotalPrice)";
                         SqlCommand detailCmd = new SqlCommand(detailQuery, conn, transaction);
-                        detailCmd.Parameters.AddWithValue("@SaleID", saled);
+                        detailCmd.Parameters.AddWithValue("@SaleID", saleId);
                         detailCmd.Parameters.AddWithValue("@ProductID", productId);
                         detailCmd.Parameters.AddWithValue("@Quantity", qty);
                         detailCmd.Parameters.AddWithValue("@UnitPrice", unitPrice);
                         detailCmd.Parameters.AddWithValue("@TotalPrice", totalPrice);
                         detailCmd.ExecuteNonQuery();
-
-                        // თუ ყველაფერი უხარვეზოდ შესრულდა, დავადასტუროთ ბაზაში
-                        transaction.Commit();
-
-                        MessageBox.Show("გაყიდვა წარმატებით განხორციელდა!", "წარმატებები", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        // დ) კალათის გასუფთავება და მოემზადე შემდეგი გაყიდვისთვის
-                        dgvCart.Rows.Clear();
-                        CalculateTotal();
-                        txtBarcode.Focus();
                     }
+
+                    // 3. თუ ყველა პროდუქტი წარმატებით ჩაიწერა, ახლა ვადასტურებთ ტრანზაქციას
+                    transaction.Commit();
+
+                    MessageBox.Show("გაყიდვა წარმატებით განხორციელდა!", "წარმატება", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // 4. დავაგენერიროთ PDF ჩეკი (ციკლის გარეთ, სანამ კალათას გავასუფთავებთ)
+                    string pdfPath = GenerateReceiptPdf(saleId, dgvCart, grandTotal);
+
+                    if (!string.IsNullOrEmpty(pdfPath))
+                    {
+                        // 📧 თუ მოლარემ ჩაწერილი აქვს მყიდველის მეილი, გაიგზავნოს Gmail-ზე
+                        if (!string.IsNullOrWhiteSpace(txtCustomerEmail.Text))
+                        {
+                            SendReceiptByEmail(txtCustomerEmail.Text.Trim(), pdfPath);
+                        }
+
+                        //  his ეკრანზე გახსნა სანახავად/ამოსაბეჭდად
+                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(pdfPath) { UseShellExecute = true });
+                    }
+
+                    // 6. კალათის გასუფთავება და მომზადება შემდეგი გაყიდვისთვის
+                    dgvCart.Rows.Clear();
+                    CalculateTotal();
+                    txtBarcode.Focus();
                 }
                 catch (Exception ex)
                 {
@@ -236,13 +256,113 @@ namespace ShopInventoryApp
                     transaction.Rollback();
                     MessageBox.Show("შეცდომა გაყიდვისას: " + ex.Message, "შეცდომა", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
             }
         }
 
-        private void txtBarcode_TextChanged(object sender, EventArgs e)
+        public string GenerateReceiptPdf(int saleId, DataGridView dgvCart, decimal totalAmount)
         {
+            string folderPath = System.IO.Path.Combine(Application.StartupPath, "Receipts");
+            if (!System.IO.Directory.Exists(folderPath))
+            {
+                System.IO.Directory.CreateDirectory(folderPath);
+            }
 
+            string filePath = System.IO.Path.Combine(folderPath, $"Receipt_{saleId}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
+
+            try
+            {
+                using (PdfWriter writer = new PdfWriter(filePath))
+                using (PdfDocument pdf = new PdfDocument(writer))
+                {
+                    // 80mm ჩეკის ზომა
+                    pdf.SetDefaultPageSize(new PageSize(226, 600));
+                    Document doc = new Document(pdf);
+                    doc.SetMargins(10, 10, 10, 10);
+
+                    // Bold შრიფტის მომზადება
+                    PdfFont boldFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+
+                    // სათაური
+                    Paragraph header = new Paragraph("MY SHOP INVENTORY")
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetFont(boldFont)
+                        .SetFontSize(14);
+                    doc.Add(header);
+
+                    Paragraph info = new Paragraph($"Check #: {saleId}\nDate: {DateTime.Now:yyyy-MM-dd HH:mm}\n-----------------------------------")
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetFontSize(9);
+                    doc.Add(info);
+
+                    // პროდუქტების ცხრილი
+                    Table table = new Table(new float[] { 50, 20, 30 }).UseAllAvailableWidth();
+
+                    table.AddHeaderCell(new Cell().Add(new Paragraph("Product").SetFont(boldFont).SetFontSize(9)).SetBorder(Border.NO_BORDER));
+                    table.AddHeaderCell(new Cell().Add(new Paragraph("Qty").SetFont(boldFont).SetFontSize(9)).SetBorder(Border.NO_BORDER));
+                    table.AddHeaderCell(new Cell().Add(new Paragraph("Total").SetFont(boldFont).SetFontSize(9)).SetBorder(Border.NO_BORDER));
+
+                    foreach (DataGridViewRow row in dgvCart.Rows)
+                    {
+                        if (row.IsNewRow || row.Cells[0].Value == null) continue;
+
+                        string name = row.Cells[2].Value?.ToString() ?? "";
+                        string qty = row.Cells[3].Value?.ToString() ?? "0";
+                        string total = Convert.ToDecimal(row.Cells[5].Value).ToString("0.00");
+
+                        table.AddCell(new Cell().Add(new Paragraph(name).SetFontSize(9)).SetBorder(Border.NO_BORDER));
+                        table.AddCell(new Cell().Add(new Paragraph(qty).SetFontSize(9)).SetBorder(Border.NO_BORDER));
+                        table.AddCell(new Cell().Add(new Paragraph(total + " GEL").SetFontSize(9)).SetBorder(Border.NO_BORDER));
+                    }
+
+                    doc.Add(table);
+
+                    // ჯამი
+                    Paragraph footer = new Paragraph($"-----------------------------------\nTOTAL: {totalAmount:0.00} GEL\n\nThank you for shopping!")
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetFont(boldFont)
+                        .SetFontSize(9);
+                    doc.Add(footer);
+                }
+
+                return filePath;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("PDF ჩეკის შექმნის შეცდომა: " + ex.Message);
+                return string.Empty;
+            }
+        }
+        public void SendReceiptByEmail(string recipientEmail, string pdfPath)
+        {
+            try
+            {
+                string senderEmail = "mateaskilashvili09@gmail.com";
+                string appPassword = "aclt xniv alou dols";
+
+                MailMessage mail = new MailMessage();
+                mail.From = new MailAddress(senderEmail, "My Shop");
+                mail.To.Add(recipientEmail);
+                mail.Subject = "თქვენი ნასყიდობის ჩეკი";
+                mail.Body = "გმადლობთ ჩვენთან შეძენისთვის! იხილეთ მიმაგრებული ჩეკი PDF ფორმატში.";
+
+                // მივაბათ PDF ფაილი
+                if (File.Exists(pdfPath))
+                {
+                    Attachment attachment = new Attachment(pdfPath);
+                    mail.Attachments.Add(attachment);
+                }
+
+                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                smtp.Credentials = new NetworkCredential(senderEmail, appPassword);
+                smtp.EnableSsl = true;
+
+                smtp.Send(mail);
+                MessageBox.Show("ჩეკი წარმატებით გაიგზავნა ელ-ფოსტაზე!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Email-ის გაგზავნის შეცდომა: " + ex.Message);
+            }
         }
     }
 }

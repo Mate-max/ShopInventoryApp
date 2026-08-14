@@ -31,26 +31,27 @@
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             txtBarcode = new TextBox();
             dgvCart = new DataGridView();
-            lblTotal = new Label();
-            btnCompleteSale = new Button();
-            label2 = new Label();
-            label3 = new Label();
             ProductID = new DataGridViewTextBoxColumn();
             Barcode = new DataGridViewTextBoxColumn();
             colProductName = new DataGridViewTextBoxColumn();
             Quantity = new DataGridViewTextBoxColumn();
             Price = new DataGridViewTextBoxColumn();
             colTotal = new DataGridViewTextBoxColumn();
+            lblTotal = new Label();
+            btnCompleteSale = new Button();
+            label2 = new Label();
+            label3 = new Label();
+            label1 = new Label();
+            txtCustomerEmail = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dgvCart).BeginInit();
             SuspendLayout();
             // 
             // txtBarcode
             // 
-            txtBarcode.Location = new Point(89, 262);
+            txtBarcode.Location = new Point(85, 262);
             txtBarcode.Name = "txtBarcode";
             txtBarcode.Size = new Size(441, 31);
             txtBarcode.TabIndex = 0;
-            txtBarcode.TextChanged += txtBarcode_TextChanged;
             txtBarcode.KeyDown += txtBarcode_KeyDown;
             // 
             // dgvCart
@@ -74,9 +75,45 @@
             dgvCart.RowHeadersWidth = 62;
             dgvCart.Size = new Size(1131, 448);
             dgvCart.TabIndex = 1;
-            dgvCart.CellContentClick += dgvCart_CellContentClick;
             dgvCart.CellValueChanged += dgvCart_CellValueChanged;
             dgvCart.KeyDown += dgvCart_KeyDown;
+            // 
+            // ProductID
+            // 
+            ProductID.HeaderText = "ProductID";
+            ProductID.MinimumWidth = 8;
+            ProductID.Name = "ProductID";
+            ProductID.Visible = false;
+            // 
+            // Barcode
+            // 
+            Barcode.HeaderText = "შტრიხკოდი";
+            Barcode.MinimumWidth = 8;
+            Barcode.Name = "Barcode";
+            // 
+            // colProductName
+            // 
+            colProductName.HeaderText = "დასახელება";
+            colProductName.MinimumWidth = 8;
+            colProductName.Name = "colProductName";
+            // 
+            // Quantity
+            // 
+            Quantity.HeaderText = "რაოდენობა";
+            Quantity.MinimumWidth = 8;
+            Quantity.Name = "Quantity";
+            // 
+            // Price
+            // 
+            Price.HeaderText = "ფასი";
+            Price.MinimumWidth = 8;
+            Price.Name = "Price";
+            // 
+            // colTotal
+            // 
+            colTotal.HeaderText = "ჯამი";
+            colTotal.MinimumWidth = 8;
+            colTotal.Name = "colTotal";
             // 
             // lblTotal
             // 
@@ -121,48 +158,30 @@
             label3.TabIndex = 5;
             label3.Text = "შტრიხკოდი";
             // 
-            // ProductID
+            // label1
             // 
-            ProductID.HeaderText = "ProductID";
-            ProductID.MinimumWidth = 8;
-            ProductID.Name = "ProductID";
-            ProductID.Visible = false;
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 15F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Location = new Point(89, 327);
+            label1.Name = "label1";
+            label1.Size = new Size(298, 41);
+            label1.TabIndex = 6;
+            label1.Text = "მყიდველის Email";
             // 
-            // Barcode
+            // txtCustomerEmail
             // 
-            Barcode.HeaderText = "შტრიხკოდი";
-            Barcode.MinimumWidth = 8;
-            Barcode.Name = "Barcode";
-            // 
-            // colProductName
-            // 
-            colProductName.HeaderText = "დასახელება";
-            colProductName.MinimumWidth = 8;
-            colProductName.Name = "colProductName";
-            // 
-            // Quantity
-            // 
-            Quantity.HeaderText = "რაოდენობა";
-            Quantity.MinimumWidth = 8;
-            Quantity.Name = "Quantity";
-            // 
-            // Price
-            // 
-            Price.HeaderText = "ფასი";
-            Price.MinimumWidth = 8;
-            Price.Name = "Price";
-            // 
-            // colTotal
-            // 
-            colTotal.HeaderText = "ჯამი";
-            colTotal.MinimumWidth = 8;
-            colTotal.Name = "colTotal";
+            txtCustomerEmail.Location = new Point(89, 410);
+            txtCustomerEmail.Name = "txtCustomerEmail";
+            txtCustomerEmail.Size = new Size(272, 31);
+            txtCustomerEmail.TabIndex = 7;
             // 
             // SalesForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(2114, 874);
+            Controls.Add(txtCustomerEmail);
+            Controls.Add(label1);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(btnCompleteSale);
@@ -191,5 +210,7 @@
         private DataGridViewTextBoxColumn Quantity;
         private DataGridViewTextBoxColumn Price;
         private DataGridViewTextBoxColumn colTotal;
+        private Label label1;
+        private TextBox txtCustomerEmail;
     }
 }

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             pnlSidebar = new Panel();
+            btnOpenReports = new Button();
             btnSales = new Button();
             btnInventory = new Button();
             pnlContent = new Panel();
@@ -38,6 +39,7 @@
             // pnlSidebar
             // 
             pnlSidebar.BackColor = Color.DimGray;
+            pnlSidebar.Controls.Add(btnOpenReports);
             pnlSidebar.Controls.Add(btnSales);
             pnlSidebar.Controls.Add(btnInventory);
             pnlSidebar.Dock = DockStyle.Left;
@@ -45,6 +47,22 @@
             pnlSidebar.Name = "pnlSidebar";
             pnlSidebar.Size = new Size(200, 717);
             pnlSidebar.TabIndex = 0;
+            // 
+            // btnOpenReports
+            // 
+            btnOpenReports.Dock = DockStyle.Top;
+            btnOpenReports.FlatAppearance.BorderSize = 0;
+            btnOpenReports.FlatStyle = FlatStyle.Flat;
+            btnOpenReports.Font = new Font("Segoe UI", 11F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnOpenReports.ForeColor = Color.Transparent;
+            btnOpenReports.Location = new Point(0, 93);
+            btnOpenReports.Name = "btnOpenReports";
+            btnOpenReports.Size = new Size(200, 34);
+            btnOpenReports.TabIndex = 1;
+            btnOpenReports.Text = "რეპორტები";
+            btnOpenReports.UseCompatibleTextRendering = true;
+            btnOpenReports.UseVisualStyleBackColor = true;
+            btnOpenReports.Click += btnOpenReports_Click;
             // 
             // btnSales
             // 
@@ -77,7 +95,7 @@
             btnInventory.TabIndex = 0;
             btnInventory.Text = "მარაგები";
             btnInventory.UseVisualStyleBackColor = false;
-            btnInventory.Click += btnInventory_Click_1;
+            btnInventory.Click += btnInventory_Click;
             // 
             // pnlContent
             // 
@@ -96,7 +114,6 @@
             Controls.Add(pnlSidebar);
             Name = "MainForm";
             Text = "MainForm";
-            Load += MainForm_Load;
             pnlSidebar.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -107,5 +124,6 @@
         private Panel pnlContent;
         private Button btnInventory;
         private Button btnSales;
+        private Button btnOpenReports;
     }
 }
