@@ -28,17 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             pnlSidebar = new Panel();
+            lblClock = new Label();
             btnOpenReports = new Button();
             btnSales = new Button();
             btnInventory = new Button();
             pnlContent = new Panel();
+            timer1 = new System.Windows.Forms.Timer(components);
             pnlSidebar.SuspendLayout();
             SuspendLayout();
             // 
             // pnlSidebar
             // 
             pnlSidebar.BackColor = Color.DimGray;
+            pnlSidebar.Controls.Add(lblClock);
             pnlSidebar.Controls.Add(btnOpenReports);
             pnlSidebar.Controls.Add(btnSales);
             pnlSidebar.Controls.Add(btnInventory);
@@ -47,6 +51,17 @@
             pnlSidebar.Name = "pnlSidebar";
             pnlSidebar.Size = new Size(200, 717);
             pnlSidebar.TabIndex = 0;
+            // 
+            // lblClock
+            // 
+            lblClock.AutoSize = true;
+            lblClock.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblClock.ForeColor = Color.White;
+            lblClock.Location = new Point(0, 680);
+            lblClock.Name = "lblClock";
+            lblClock.Size = new Size(70, 28);
+            lblClock.TabIndex = 0;
+            lblClock.Text = "label1";
             // 
             // btnOpenReports
             // 
@@ -105,6 +120,12 @@
             pnlContent.Size = new Size(1771, 717);
             pnlContent.TabIndex = 1;
             // 
+            // timer1
+            // 
+            timer1.Enabled = true;
+            timer1.Interval = 1000;
+            timer1.Tick += timer1_Tick;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -115,6 +136,7 @@
             Name = "MainForm";
             Text = "MainForm";
             pnlSidebar.ResumeLayout(false);
+            pnlSidebar.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -125,5 +147,7 @@
         private Button btnInventory;
         private Button btnSales;
         private Button btnOpenReports;
+        private Label lblClock;
+        private System.Windows.Forms.Timer timer1;
     }
 }
