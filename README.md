@@ -30,3 +30,10 @@
   * `iTextSharp` / `PdfSharp` — PDF ჩეკების გენერაციისთვის.
   * `ClosedXML` — Excel რეპორტების ექსპორტისთვის.
   * `System.Net.Mail` — Gmail SMTP ავტომატიზაციისთვის.
+
+## 📸 ეკრანის სქრინშოტები (Screenshots)
+<img width="2233" height="996" alt="Screenshot 2026-08-13 204856" src="https://github.com/user-attachments/assets/3af25972-90bc-497b-ab60-297f8cff6500" />
+<img width="1970" height="900" alt="Screenshot 2026-08-13 211107" src="https://github.com/user-attachments/assets/b50fb53c-b74e-4086-b1d0-c67caf7410c2" />
+<img width="1977" height="863" alt="Screenshot 2026-08-10 141700" src="https://github.com/user-attachments/assets/aac45afc-c411-45a8-be68-bd603e9cd24d" />
+
+
