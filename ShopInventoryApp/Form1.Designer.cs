@@ -48,6 +48,7 @@
             btnExportExcel = new Button();
             btnExportPdf = new Button();
             cmbCategories = new ComboBox();
+            toolStrip1 = new ToolStrip();
             ((System.ComponentModel.ISupportInitialize)dgvProducts).BeginInit();
             SuspendLayout();
             // 
@@ -285,12 +286,22 @@
             cmbCategories.Size = new Size(200, 33);
             cmbCategories.TabIndex = 19;
             // 
+            // toolStrip1
+            // 
+            toolStrip1.ImageScalingSize = new Size(24, 24);
+            toolStrip1.Location = new Point(0, 0);
+            toolStrip1.Name = "toolStrip1";
+            toolStrip1.Size = new Size(1950, 25);
+            toolStrip1.TabIndex = 20;
+            toolStrip1.Text = "toolStrip1";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLight;
             ClientSize = new Size(1950, 1076);
+            Controls.Add(toolStrip1);
             Controls.Add(cmbCategories);
             Controls.Add(btnExportPdf);
             Controls.Add(btnExportExcel);
@@ -339,5 +350,6 @@
         private Button btnExportExcel;
         private Button btnExportPdf;
         private ComboBox cmbCategories;
+        private ToolStrip toolStrip1;
     }
 }
