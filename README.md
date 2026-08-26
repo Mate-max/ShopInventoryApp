@@ -32,7 +32,7 @@
 ## 📸 ეკრანის სქრინშოტები (Screenshots)
 <img width="1106" height="459" alt="image" src="https://github.com/user-attachments/assets/940e80f1-e101-4e10-8a21-43c224633964" />
 
-<img width="1970" height="900" alt="Screenshot 2026-08-13 211107" src="https://github.com/user-attachments/assets/b50fb53c-b74e-4086-b1d0-c67caf7410c2" />
+<img width="1099" height="481" alt="image" src="https://github.com/user-attachments/assets/1c1b076e-49f1-4d80-93ba-84de0e07cf75" />
 
 <img width="1977" height="863" alt="Screenshot 2026-08-10 141700" src="https://github.com/user-attachments/assets/aac45afc-c411-45a8-be68-bd603e9cd24d" />
 
