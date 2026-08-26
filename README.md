@@ -1,5 +1,3 @@
-<img width="1106" height="459" alt="image" src="https://github.com/user-attachments/assets/472c22c3-c228-4ef4-b784-ebd009cc1542" /># 🛒 ShopInventoryApp — Smart Retail & POS System
-
 ![C#](https://img.shields.io/badge/C%23-.NET%2010.0-blue?style=for-the-badge&logo=csharp)
 ![SQL Server](https://img.shields.io/badge/Database-MS%20SQL%20Server-red?style=for-the-badge&logo=microsoftsqlserver)
 ![UI](https://img.shields.io/badge/UI-Windows%20Forms-lightgrey?style=for-the-badge)
