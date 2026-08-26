@@ -30,9 +30,11 @@
   * `System.Net.Mail` — Gmail SMTP ავტომატიზაციისთვის.
 
 ## 📸 ეკრანის სქრინშოტები (Screenshots)
-<img width="1106" height="459" alt="image" src="https://github.com/user-attachments/assets/940e80f1-e101-4e10-8a21-43c224633964" />
+<img width="1094" height="474" alt="image" src="https://github.com/user-attachments/assets/c37f68ca-1eb5-4b34-a17f-b711ee6d6754" />
+
 
 <img width="1099" height="481" alt="image" src="https://github.com/user-attachments/assets/1c1b076e-49f1-4d80-93ba-84de0e07cf75" />
+
 
 <img width="984" height="380" alt="Screenshot 2026-08-26 123431" src="https://github.com/user-attachments/assets/9aac4eea-2bd6-4428-bf98-4b824f8d862e" />
 
