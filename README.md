@@ -1,4 +1,4 @@
-# 🛒 ShopInventoryApp — Smart Retail & POS System
+<img width="1106" height="459" alt="image" src="https://github.com/user-attachments/assets/472c22c3-c228-4ef4-b784-ebd009cc1542" /># 🛒 ShopInventoryApp — Smart Retail & POS System
 
 ![C#](https://img.shields.io/badge/C%23-.NET%2010.0-blue?style=for-the-badge&logo=csharp)
 ![SQL Server](https://img.shields.io/badge/Database-MS%20SQL%20Server-red?style=for-the-badge&logo=microsoftsqlserver)
@@ -32,8 +32,10 @@
   * `System.Net.Mail` — Gmail SMTP ავტომატიზაციისთვის.
 
 ## 📸 ეკრანის სქრინშოტები (Screenshots)
-<img width="2233" height="996" alt="Screenshot 2026-08-13 204856" src="https://github.com/user-attachments/assets/3af25972-90bc-497b-ab60-297f8cff6500" />
+<img width="1106" height="459" alt="image" src="https://github.com/user-attachments/assets/940e80f1-e101-4e10-8a21-43c224633964" />
+
 <img width="1970" height="900" alt="Screenshot 2026-08-13 211107" src="https://github.com/user-attachments/assets/b50fb53c-b74e-4086-b1d0-c67caf7410c2" />
+
 <img width="1977" height="863" alt="Screenshot 2026-08-10 141700" src="https://github.com/user-attachments/assets/aac45afc-c411-45a8-be68-bd603e9cd24d" />
 
 
